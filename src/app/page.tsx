@@ -5,6 +5,7 @@ import { useState, useEffect, useRef } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/ui/Hero';
+import Image from 'next/image';
 
 const ServiceCard = ({ title, description, index }: { title: string; description: string; index: number }) => {
   const ref = useRef(null);
@@ -24,6 +25,61 @@ const ServiceCard = ({ title, description, index }: { title: string; description
     >
       <h3 className="text-xl font-semibold mb-4">{title}</h3>
       <p className="text-gray-600">{description}</p>
+    </motion.div>
+  );
+};
+
+const StrengthCard = ({ title, description, icon, index }: { title: string; description: string; icon: string; index: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white p-8 rounded-lg shadow-md text-center"
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.2,
+        ease: "easeOut"
+      }}
+    >
+      <div className="text-4xl mb-4 text-blue-600">{icon}</div>
+      <h3 className="text-xl font-semibold mb-4">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </motion.div>
+  );
+};
+
+const ProjectCard = ({ title, description, imagePath, index }: { title: string; description: string; imagePath: string; index: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white rounded-lg shadow-md overflow-hidden"
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.2,
+        ease: "easeOut"
+      }}
+    >
+      <div className="relative h-48">
+        <Image
+          src={imagePath}
+          alt={title}
+          fill
+          className="object-cover"
+        />
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-semibold mb-2">{title}</h3>
+        <p className="text-gray-600">{description}</p>
+      </div>
     </motion.div>
   );
 };
@@ -159,6 +215,74 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        <section className="py-16 bg-white">
+          <div className="container mx-auto px-4">
+            <motion.h2
+              ref={titleRef}
+              className="text-3xl font-bold text-center mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              私たちの強み
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <StrengthCard
+                title="豊富な経験"
+                description="40年以上の実績と経験を活かし、あらゆる電気工事に対応いたします。"
+                icon="🏢"
+                index={0}
+              />
+              <StrengthCard
+                title="24時間対応"
+                description="緊急時にも迅速に対応。お客様の安全を24時間365日守ります。"
+                icon="⏰"
+                index={1}
+              />
+              <StrengthCard
+                title="資格保有者多数"
+                description="電気工事士、電気主任技術者など、資格保有者が在籍しています。"
+                icon="📜"
+                index={2}
+              />
+            </div>
+          </div>
+        </section>
+
+        <section className="py-16 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <motion.h2
+              className="text-3xl font-bold text-center mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
+              施工実績
+            </motion.h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <ProjectCard
+                title="オフィスビル電気設備工事"
+                description="最新のLED照明システムと省エネ設備の導入により、電力消費を30%削減。"
+                imagePath="/images/project1.jpg"
+                index={0}
+              />
+              <ProjectCard
+                title="工場設備更新工事"
+                description="生産ライン電気設備の完全リニューアル。24時間稼働の製造ラインを停止させることなく工事を完了。"
+                imagePath="/images/project2.jpg"
+                index={1}
+              />
+              <ProjectCard
+                title="商業施設電気設備"
+                description="大規模商業施設の電気設備を一括管理。非常用電源の設置により、災害時の安全性を確保。"
+                imagePath="/images/project3.jpg"
+                index={2}
+              />
+            </div>
+          </div>
+        </section>
+
         <Footer />
       </motion.main>
     </>
