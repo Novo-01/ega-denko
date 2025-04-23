@@ -1,14 +1,38 @@
 'use client';
 
-import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { motion, AnimatePresence, useInView } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
 import Header from '@/components/layout/Header';
 import Footer from '@/components/layout/Footer';
 import Hero from '@/components/ui/Hero';
 
+const ServiceCard = ({ title, description, index }: { title: string; description: string; index: number }) => {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
+  return (
+    <motion.div
+      ref={ref}
+      className="bg-white p-6 rounded-lg shadow-md"
+      initial={{ opacity: 0, y: 50 }}
+      animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+      transition={{
+        duration: 0.8,
+        delay: index * 0.2,
+        ease: "easeOut"
+      }}
+    >
+      <h3 className="text-xl font-semibold mb-4">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+    </motion.div>
+  );
+};
+
 export default function Home() {
   const [showContent, setShowContent] = useState(false);
   const text = "ega-denko".split("");
+  const titleRef = useRef(null);
+  const isTitleInView = useInView(titleRef, { once: true, margin: "-100px" });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -107,31 +131,31 @@ export default function Home() {
         <Hero />
         <section className="py-16 bg-gray-50">
           <div className="container mx-auto px-4">
-            <h2 className="text-3xl font-bold text-center mb-12">
+            <motion.h2
+              ref={titleRef}
+              className="text-3xl font-bold text-center mb-12"
+              initial={{ opacity: 0, y: 30 }}
+              animate={isTitleInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+            >
               サービス紹介
-            </h2>
+            </motion.h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4">電気工事</h3>
-                <p className="text-gray-600">
-                  新築・リフォームの電気工事から、各種設備の設置・メンテナンスまで、
-                  幅広い電気工事に対応しています。
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4">設備管理</h3>
-                <p className="text-gray-600">
-                  ビルや工場などの電気設備の定期点検・メンテナンスを行い、
-                  安全で快適な環境を維持します。
-                </p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h3 className="text-xl font-semibold mb-4">省エネ提案</h3>
-                <p className="text-gray-600">
-                  最新の省エネ技術を活用し、電気代の削減と環境負荷の低減を
-                  実現する提案を行います。
-                </p>
-              </div>
+              <ServiceCard
+                title="電気工事"
+                description="新築・リフォームの電気工事から、各種設備の設置・メンテナンスまで、幅広い電気工事に対応しています。"
+                index={0}
+              />
+              <ServiceCard
+                title="設備管理"
+                description="ビルや工場などの電気設備の定期点検・メンテナンスを行い、安全で快適な環境を維持します。"
+                index={1}
+              />
+              <ServiceCard
+                title="省エネ提案"
+                description="最新の省エネ技術を活用し、電気代の削減と環境負荷の低減を実現する提案を行います。"
+                index={2}
+              />
             </div>
           </div>
         </section>
